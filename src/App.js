@@ -5,6 +5,7 @@ import {createStructuredSelector} from 'reselect';
 import {setCurrentUser} from './redux/user/user.actions';
 import {selectCurrentUser} from './redux/user/user.selectors';
 import { auth,createUserProfileDocument } from './firebase/firebase.utils';
+// import { selectCollectionsForPreview } from './redux/shop/shop.selectors';
 
 import Header from './components/header/header.component';
 import HomePage from './pages/homepage/homepage.component';
@@ -24,7 +25,7 @@ unsbscribeFromAuth =null;
 componentDidMount(){
   const {setCurrentUser} = this.props;
 
-this.unsbscribeFromAuth = auth.onAuthStateChanged(async userAuth =>{ 
+this.unsbscribeFromAuth = auth.onAuthStateChanged(async userAuth => { 
   if(userAuth){
     const userRef = await createUserProfileDocument(userAuth);
 
@@ -38,6 +39,7 @@ this.unsbscribeFromAuth = auth.onAuthStateChanged(async userAuth =>{
     
   }
   else setCurrentUser( userAuth );
+  // addCollectionAndDocuments('collections',collectionsArray.map( ({title,items}) => ({title,items}) ));
  
   } )
 }
@@ -62,7 +64,8 @@ render(){
 }
 }
 const mapStateToProps = createStructuredSelector({
-  currentUser: selectCurrentUser
+  currentUser: selectCurrentUser,
+  // collectionsArray : selectCollectionsForPreview
 })
 const mapDispatchToProps = dispatch => ({
  setCurrentUser : user => dispatch(setCurrentUser(user))
