@@ -1,4 +1,4 @@
-import {takeLatest,put, call} from 'redux-saga/effects';
+import {takeLatest,put, call,all} from 'redux-saga/effects';
 import { firestore, convertCollectionsSnapShotToMap } from '../../firebase/firebase.utils';
 import {fetchCollctionsSuccess,fetchCollctionsFailure} from './shop.actions';
 
@@ -9,9 +9,9 @@ export function* fetchCollectionsAsync(){
     const collectionRef = firestore.collection('collections');
     const snapshot = yield collectionRef.get();
     const collectionsMap = yield call(convertCollectionsSnapShotToMap,snapshot);
-    yield put(fetchCollctionsSuccess(collectionsMap))
+    yield put(fetchCollctionsSuccess(collectionsMap));
 } catch(error){
-    yield put(fetchCollctionsFailure(error.message))
+    yield put(fetchCollctionsFailure(error.message));
 }
         // previous format while using thunk methode 
         //collectionRef.get().then(snapshot => {
@@ -23,3 +23,7 @@ export function* fetchCollectionsAsync(){
 export function* fetchCollectionsStart(){
     yield takeLatest(shopActionType.FETCH_COLLECTIONS_START,fetchCollectionsAsync)
 }
+
+export function* shopSagas() {
+    yield all([call(fetchCollectionsStart)]);
+  }
